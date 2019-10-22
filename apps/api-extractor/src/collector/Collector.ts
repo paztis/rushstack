@@ -30,6 +30,8 @@ import { TypeScriptInternals } from '../analyzer/TypeScriptInternals';
 import { MessageRouter } from './MessageRouter';
 import { AstReferenceResolver } from '../analyzer/AstReferenceResolver';
 import { ExtractorConfig } from '../api/ExtractorConfig';
+import { AstImport } from '../analyzer/AstImport';
+import { AstImportInternal } from '../analyzer/AstImportInternal';
 
 /**
  * Options for Collector constructor.
@@ -232,6 +234,8 @@ export class Collector {
 
       if (exportedAstEntity instanceof AstSymbol) {
         this.fetchSymbolMetadata(exportedAstEntity);
+      } else if (exportedAstEntity instanceof AstImportInternal) {
+        // no metadata for internal module import
       }
     }
 
@@ -297,8 +301,14 @@ export class Collector {
     if (astEntity instanceof AstSymbol) {
       return this.fetchSymbolMetadata(astEntity);
     }
-    if (astEntity.astSymbol) { // astImport
-      return this.fetchSymbolMetadata(astEntity.astSymbol);
+    if (astEntity instanceof AstImport) {
+      if (astEntity.astSymbol) { // astImport
+        return this.fetchSymbolMetadata(astEntity.astSymbol);
+      }
+    }
+    if (astEntity instanceof AstImportInternal) {
+      // no metadata for internal module import
+      return undefined;
     }
     return undefined;
   }
@@ -383,7 +393,7 @@ export class Collector {
       this._entitiesByAstEntity.set(astEntity, entity);
       this._entities.push(entity);
 
-      if (astEntity instanceof AstSymbol) {
+      if (astEntity instanceof AstSymbol || astEntity instanceof AstImportInternal) {
         this._collectReferenceDirectives(astEntity);
       }
     }
@@ -415,6 +425,10 @@ export class Collector {
 
           this._createEntityForIndirectReferences(referencedAstEntity, alreadySeenAstEntities);
         }
+      });
+    } else if (astEntity instanceof AstImportInternal) {
+      this.astSymbolTable.fetchAstModuleExportInfo(astEntity.astModule).exportedLocalEntities.forEach((exportedEntity: AstEntity) => {
+        this._createEntityForIndirectReferences(exportedEntity, alreadySeenAstEntities); // TODO- create entity for module export
       });
     }
   }
@@ -883,11 +897,18 @@ export class Collector {
     return parserContext;
   }
 
-  private _collectReferenceDirectives(astSymbol: AstSymbol): void {
+  private _collectReferenceDirectives(astEntity: AstSymbol | AstImportInternal): void {
     const seenFilenames: Set<string> = new Set<string>();
+    const sourceFiles: ts.SourceFile[] = [];
+    if (astEntity instanceof AstSymbol) {
+      for (const astDeclaration of astEntity.astDeclarations) {
+        sourceFiles.push(astDeclaration.declaration.getSourceFile());
+      }
+    } else {
+      sourceFiles.push(astEntity.astModule.sourceFile);
+    }
 
-    for (const astDeclaration of astSymbol.astDeclarations) {
-      const sourceFile: ts.SourceFile = astDeclaration.declaration.getSourceFile();
+    for (const sourceFile of sourceFiles) {
       if (sourceFile && sourceFile.fileName) {
         if (!seenFilenames.has(sourceFile.fileName)) {
           seenFilenames.add(sourceFile.fileName);

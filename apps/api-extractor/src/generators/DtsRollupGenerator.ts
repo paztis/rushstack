@@ -19,6 +19,7 @@ import { SymbolMetadata } from '../collector/SymbolMetadata';
 import { StringWriter } from './StringWriter';
 import { DtsEmitHelpers } from './DtsEmitHelpers';
 import { DeclarationMetadata } from '../collector/DeclarationMetadata';
+import { AstImportInternal } from '../analyzer/AstImportInternal';
 
 /**
  * Used with DtsRollupGenerator.writeTypingsFile()
@@ -131,6 +132,8 @@ export class DtsRollupGenerator {
             stringWriter.writeLine(span.getModifiedText());
           }
         }
+      } else if (entity.astEntity instanceof AstImportInternal) {
+        throw new InternalError('Unsupported AstImportInternal');
       }
 
       if (!entity.shouldInlineExport) {

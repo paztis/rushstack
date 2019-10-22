@@ -16,6 +16,7 @@ import { AstSymbol } from '../analyzer/AstSymbol';
 import { ExtractorMessage } from '../api/ExtractorMessage';
 import { StringWriter } from './StringWriter';
 import { DtsEmitHelpers } from './DtsEmitHelpers';
+import { AstImportInternal } from '../analyzer/AstImportInternal';
 
 export class ApiReportGenerator {
   private static _TrimSpacesRegExp: RegExp = / +$/gm;
@@ -116,6 +117,8 @@ export class ApiReportGenerator {
             span.writeModifiedText(stringWriter.stringBuilder);
             stringWriter.writeLine('\n');
           }
+        } else if (entity.astEntity instanceof AstImportInternal) {
+          throw new InternalError('Unsupported AstImportInternal');
         }
 
         // Now emit the export statements for this entity.
