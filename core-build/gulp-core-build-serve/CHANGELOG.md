@@ -1,6 +1,18 @@
 # Change Log - @microsoft/gulp-core-build-serve
 
-This log was last generated on Tue, 21 Jan 2020 21:56:13 GMT and should not be manually modified.
+This log was last generated on Fri, 24 Jan 2020 00:27:39 GMT and should not be manually modified.
+
+## 3.7.0
+Fri, 24 Jan 2020 00:27:39 GMT
+
+### Minor changes
+
+- Extract debug certificate logic into separate package.
+
+## 3.6.2
+Thu, 23 Jan 2020 01:07:56 GMT
+
+*Version update only*
 
 ## 3.6.1
 Tue, 21 Jan 2020 21:56:13 GMT
