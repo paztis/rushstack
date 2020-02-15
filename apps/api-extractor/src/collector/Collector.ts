@@ -428,6 +428,9 @@ export class Collector {
       });
     } else if (astEntity instanceof AstImportInternal) {
       this.astSymbolTable.fetchAstModuleExportInfo(astEntity.astModule).exportedLocalEntities.forEach((exportedEntity: AstEntity) => {
+        // Create a CollectorEntity for each top-level export of AstImportInternal entity
+        this._createCollectorEntity(exportedEntity, undefined);
+
         this._createEntityForIndirectReferences(exportedEntity, alreadySeenAstEntities); // TODO- create entity for module export
       });
     }

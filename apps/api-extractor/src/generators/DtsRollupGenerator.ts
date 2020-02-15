@@ -133,7 +133,39 @@ export class DtsRollupGenerator {
           }
         }
       } else if (entity.astEntity instanceof AstImportInternal) {
-        throw new InternalError('Unsupported AstImportInternal');
+        if (!entity.astEntity.astModule.astModuleExportInfo) {
+          // This should never happen
+          throw new InternalError('local imported module has not been parsed.');
+        }
+        if (!entity.nameForEmit) {
+          // This should never happen
+          throw new InternalError('referencedEntry.nameForEmit is undefined');
+        }
+        // manually generate typings for local imported module
+        stringWriter.writeLine();
+        if (entity.shouldInlineExport) {
+          stringWriter.write('export ');
+        }
+        stringWriter.writeLine(`declare namespace ${entity.nameForEmit} {`);
+
+        // all local exports of local imported module are just references to top-level declarations
+        stringWriter.writeLine('  export {');
+        entity.astEntity.astModule.astModuleExportInfo.exportedLocalEntities.forEach((exportedEntity, exportedName) => {
+          const collectorEntity: CollectorEntity | undefined = collector.tryGetCollectorEntity(exportedEntity);
+          if (!collectorEntity) {
+            // This should never happen
+            // top-level exports of local imported module should be added as collector entities before
+            throw new Error(`Cannot find collector entity for ${entity.nameForEmit}.${exportedEntity.localName}`);
+          }
+          if (collectorEntity.nameForEmit === exportedName) {
+            stringWriter.writeLine(`    ${collectorEntity.nameForEmit},`);
+          } else {
+            stringWriter.writeLine(`    ${collectorEntity.nameForEmit} as ${exportedName},`);
+          }
+        });
+        stringWriter.writeLine('  }'); // end of "export { ... }"
+
+        stringWriter.writeLine('}'); // end of "declare namespace { ... }"
       }
 
       if (!entity.shouldInlineExport) {
