@@ -74,6 +74,7 @@ export class ExportAnalyzer {
   private readonly _importableAmbientSourceFiles: Set<ts.SourceFile> = new Set<ts.SourceFile>();
 
   private readonly _astImportsByKey: Map<string, AstImport> = new Map<string, AstImport>();
+  private readonly _astImportInternalsByAstModule: Map<AstModule, AstImportInternal> = new Map<AstModule, AstImportInternal>();
 
   public constructor(program: ts.Program, typeChecker: ts.TypeChecker, bundledPackageNames: Set<string>,
     astSymbolTable: IAstSymbolTable) {
@@ -452,11 +453,16 @@ export class ExportAnalyzer {
 
         if (externalModulePath === undefined) {
           const astModule: AstModule = this._fetchSpecifierAstModule(importDeclaration, declarationSymbol);
-          return new AstImportInternal({
-            importKind: AstImportInternalKind.StarImport,
-            exportName: declarationSymbol.name,
-            astModule: astModule
-          });
+          let astImportInternal: AstImportInternal | undefined = this._astImportInternalsByAstModule.get(astModule);
+          if (!astImportInternal) {
+            astImportInternal = new AstImportInternal({
+              importKind: AstImportInternalKind.StarImport,
+              exportName: declarationSymbol.name,
+              astModule: astModule
+            });
+            this._astImportInternalsByAstModule.set(astModule, astImportInternal);
+          }
+          return astImportInternal;
         }
 
         // Here importSymbol=undefined because {@inheritDoc} and such are not going to work correctly for
