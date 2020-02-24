@@ -2,6 +2,33 @@
   "name": "@microsoft/set-webpack-public-path-plugin",
   "entries": [
     {
+      "version": "2.4.0",
+      "tag": "@microsoft/set-webpack-public-path-plugin_v2.4.0",
+      "date": "Tue, 04 Feb 2020 16:08:20 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add functionality to use the webpack-produced asset name to find the loaded acript."
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.3.4",
+      "tag": "@microsoft/set-webpack-public-path-plugin_v2.3.4",
+      "date": "Tue, 28 Jan 2020 02:23:44 GMT",
+      "comments": {
+        "dependency": [
+          {
+            "comment": "Updating dependency \"@microsoft/node-library-build\" from `6.4.3` to `6.4.4`"
+          },
+          {
+            "comment": "Updating dependency \"@microsoft/rush-stack-compiler-3.5\" from `0.4.2` to `0.4.3`"
+          }
+        ]
+      }
+    },
+    {
       "version": "2.3.3",
       "tag": "@microsoft/set-webpack-public-path-plugin_v2.3.3",
       "date": "Fri, 24 Jan 2020 00:27:39 GMT",

@@ -15,10 +15,6 @@
       "allowedCategories": [ "libraries" ]
     },
     {
-      "name": "@rushstack/debug-certificate-manager",
-      "allowedCategories": [ "libraries" ]
-    },
-    {
       "name": "@microsoft/decorators",
       "allowedCategories": [ "libraries" ]
     },
@@ -124,7 +120,7 @@
     },
     {
       "name": "@microsoft/set-webpack-public-path-plugin",
-      "allowedCategories": [ "libraries" ]
+      "allowedCategories": [ "libraries", "tests" ]
     },
     {
       "name": "@microsoft/sp-tslint-rules",
@@ -159,12 +155,20 @@
       "allowedCategories": [ "libraries" ]
     },
     {
+      "name": "@rushstack/debug-certificate-manager",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
       "name": "@rushstack/eslint-config",
       "allowedCategories": [ "libraries", "tests" ]
     },
     {
       "name": "@rushstack/eslint-plugin",
       "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "@rushstack/localization-plugin",
+      "allowedCategories": [ "tests" ]
     },
     {
       "name": "@typescript-eslint/eslint-plugin",
@@ -227,6 +231,10 @@
       "allowedCategories": [ "libraries" ]
     },
     {
+      "name": "chokidar",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
       "name": "clean-css",
       "allowedCategories": [ "libraries" ]
     },
@@ -240,6 +248,10 @@
     },
     {
       "name": "deasync",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "decache",
       "allowedCategories": [ "libraries" ]
     },
     {
@@ -387,6 +399,10 @@
       "allowedCategories": [ "libraries" ]
     },
     {
+      "name": "html-webpack-plugin",
+      "allowedCategories": [ "tests" ]
+    },
+    {
       "name": "https-proxy-agent",
       "allowedCategories": [ "libraries" ]
     },
@@ -507,6 +523,10 @@
       "allowedCategories": [ "libraries" ]
     },
     {
+      "name": "pseudolocale",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
       "name": "read-package-tree",
       "allowedCategories": [ "libraries" ]
     },
@@ -559,6 +579,10 @@
       "allowedCategories": [ "libraries", "tests" ]
     },
     {
+      "name": "ts-loader",
+      "allowedCategories": [ "tests" ]
+    },
+    {
       "name": "tslint",
       "allowedCategories": [ "libraries" ]
     },
@@ -580,7 +604,19 @@
     },
     {
       "name": "webpack",
-      "allowedCategories": [ "libraries" ]
+      "allowedCategories": [ "libraries", "tests" ]
+    },
+    {
+      "name": "webpack-bundle-analyzer",
+      "allowedCategories": [ "tests" ]
+    },
+    {
+      "name": "webpack-cli",
+      "allowedCategories": [ "tests" ]
+    },
+    {
+      "name": "webpack-dev-server",
+      "allowedCategories": [ "tests" ]
     },
     {
       "name": "wordwrap",
@@ -588,6 +624,10 @@
     },
     {
       "name": "xml",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "xmldoc",
       "allowedCategories": [ "libraries" ]
     },
     {
