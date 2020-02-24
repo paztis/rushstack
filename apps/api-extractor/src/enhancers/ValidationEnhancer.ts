@@ -12,6 +12,8 @@ import { SymbolMetadata } from '../collector/SymbolMetadata';
 import { CollectorEntity } from '../collector/CollectorEntity';
 import { ExtractorMessageId } from '../api/ExtractorMessageId';
 import { ReleaseTag } from '@microsoft/api-extractor-model';
+import { AstImportInternal } from '../analyzer/AstImportInternal';
+import { InternalError } from '@microsoft/node-core-library';
 
 export class ValidationEnhancer {
 
@@ -29,6 +31,8 @@ export class ValidationEnhancer {
           ValidationEnhancer._checkForInternalUnderscore(collector, entity, entity.astEntity, symbolMetadata);
           ValidationEnhancer._checkForInconsistentReleaseTags(collector, entity.astEntity, symbolMetadata);
         }
+      } else if (entity.astEntity instanceof AstImportInternal) {
+        // doesn't need to analyze for local module import
       }
     }
   }
@@ -209,6 +213,8 @@ export class ValidationEnhancer {
 
           }
         }
+      } else if (referencedEntity instanceof AstImportInternal) {
+        throw new InternalError('Unsupported AstImportInternal');
       }
     }
   }

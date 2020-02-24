@@ -11,6 +11,7 @@ import { AstModule, AstModuleExportInfo } from './AstModule';
 import { TypeScriptInternals } from './TypeScriptInternals';
 import { TypeScriptMessageFormatter } from './TypeScriptMessageFormatter';
 import { IFetchAstSymbolOptions, AstEntity } from './AstSymbolTable';
+import { AstImportInternal, AstImportInternalKind } from './AstImportInternal';
 
 /**
  * Exposes the minimal APIs from AstSymbolTable that are needed by ExportAnalyzer.
@@ -21,7 +22,7 @@ import { IFetchAstSymbolOptions, AstEntity } from './AstSymbolTable';
 export interface IAstSymbolTable {
   fetchAstSymbol(options: IFetchAstSymbolOptions): AstSymbol | undefined;
 
-  analyze(astSymbol: AstSymbol): void;
+  analyze(astSymbol: AstSymbol | AstImportInternal): void;
 }
 
 /**
@@ -73,6 +74,7 @@ export class ExportAnalyzer {
   private readonly _importableAmbientSourceFiles: Set<ts.SourceFile> = new Set<ts.SourceFile>();
 
   private readonly _astImportsByKey: Map<string, AstImport> = new Map<string, AstImport>();
+  private readonly _astImportInternalsByAstModule: Map<AstModule, AstImportInternal> = new Map<AstModule, AstImportInternal>();
 
   public constructor(program: ts.Program, typeChecker: ts.TypeChecker, bundledPackageNames: Set<string>,
     astSymbolTable: IAstSymbolTable) {
@@ -307,6 +309,9 @@ export class ExportAnalyzer {
                   if (astEntity instanceof AstSymbol && !astEntity.isExternal) {
                     this._astSymbolTable.analyze(astEntity);
                   }
+                  if (astEntity instanceof AstImportInternal && !astEntity.astModule.isExternal) {
+                    this._astSymbolTable.analyze(astEntity);
+                  }
 
                   astModuleExportInfo.exportedLocalEntities.set(exportSymbol.name, astEntity);
                 }
@@ -447,10 +452,17 @@ export class ExportAnalyzer {
         //   SemicolonToken:  pre=[;]
 
         if (externalModulePath === undefined) {
-          // The implementation here only works when importing from an external module.
-          // The full solution is tracked by: https://github.com/microsoft/rushstack/issues/1029
-          throw new Error('"import * as ___ from ___;" is not supported yet for local files.'
-            + '\nFailure in: ' + importDeclaration.getSourceFile().fileName);
+          const astModule: AstModule = this._fetchSpecifierAstModule(importDeclaration, declarationSymbol);
+          let astImportInternal: AstImportInternal | undefined = this._astImportInternalsByAstModule.get(astModule);
+          if (!astImportInternal) {
+            astImportInternal = new AstImportInternal({
+              importKind: AstImportInternalKind.StarImport,
+              exportName: declarationSymbol.name,
+              astModule: astModule
+            });
+            this._astImportInternalsByAstModule.set(astModule, astImportInternal);
+          }
+          return astImportInternal;
         }
 
         // Here importSymbol=undefined because {@inheritDoc} and such are not going to work correctly for
@@ -559,6 +571,8 @@ export class ExportAnalyzer {
             exportName: variableName
           });
         }
+      } else {
+        // throw new InternalError('Unsupported Equal Module Import for local file.');
       }
     }
 
@@ -630,6 +644,7 @@ export class ExportAnalyzer {
 
         if (starExportedModule.externalModulePath !== undefined) {
           // This entity was obtained from an external module, so return an AstImport instead
+          // TODO-
           const astSymbol: AstSymbol = astEntity as AstSymbol;
           return this._fetchAstImport(astSymbol.followedSymbol, {
             importKind: AstImportKind.NamedImport,

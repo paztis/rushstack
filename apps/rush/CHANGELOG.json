@@ -2,6 +2,96 @@
   "name": "@microsoft/rush",
   "entries": [
     {
+      "version": "5.20.0",
+      "tag": "@microsoft/rush_v5.20.0",
+      "date": "Wed, 12 Feb 2020 21:51:19 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Support \".\" as a value for the --to and --from parameters to build to the current project."
+          },
+          {
+            "comment": "Improve security by allowing the \"rush publish\" authentication token to be specified via an environment variable."
+          }
+        ]
+      }
+    },
+    {
+      "version": "5.19.4",
+      "tag": "@microsoft/rush_v5.19.4",
+      "date": "Tue, 28 Jan 2020 03:57:30 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Fix an issue where a missing \"repository\" property in rush.json would cause \"rush change\" to throw."
+          }
+        ]
+      }
+    },
+    {
+      "version": "5.19.3",
+      "tag": "@microsoft/rush_v5.19.3",
+      "date": "Tue, 28 Jan 2020 01:35:53 GMT",
+      "comments": {}
+    },
+    {
+      "version": "5.19.2",
+      "tag": "@microsoft/rush_v5.19.2",
+      "date": "Tue, 28 Jan 2020 01:08:26 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Fix an issue where the rushx command will always report error."
+          },
+          {
+            "comment": "Fixes \"too many params\" and \"unable to find ref v<version>\" issues in git tagging while publishing."
+          }
+        ]
+      }
+    },
+    {
+      "version": "5.19.1",
+      "tag": "@microsoft/rush_v5.19.1",
+      "date": "Sat, 25 Jan 2020 05:15:10 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Fix an issue with install-run.js, where successful executions exit with a nonzero exit code."
+          }
+        ]
+      }
+    },
+    {
+      "version": "5.19.0",
+      "tag": "@microsoft/rush_v5.19.0",
+      "date": "Sat, 25 Jan 2020 04:19:23 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Make the default branch and default remote configurable."
+          },
+          {
+            "comment": "Fix an issue where the Rush process terminates without any error message during installation/linking, due to a dependency package that broke its SemVer contract (GitHub #1713)"
+          },
+          {
+            "comment": "Update package.json files without reformatting or reordering properties and fields during \"rush add\", \"rush version\" and \"rush publish\"."
+          },
+          {
+            "comment": "Upgrade Node typings to Node 10"
+          },
+          {
+            "comment": "Update the \"rush init\" .gitignore file to ignore .rush/temp and .DS_Store folders"
+          },
+          {
+            "comment": "Improve command-line.json handling so that the \"rush build\" and \"rush rebuild\" commands can be extended without having to duplicate the built-in options (GitHub #1375)"
+          },
+          {
+            "comment": "Add a --json flag for \"rush list\" to facilitate automation"
+          }
+        ]
+      }
+    },
+    {
       "version": "5.18.0",
       "tag": "@microsoft/rush_v5.18.0",
       "date": "Sat, 11 Jan 2020 05:38:55 GMT",

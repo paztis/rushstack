@@ -12,6 +12,7 @@ import { AedocDefinitions, ReleaseTag } from '@microsoft/api-extractor-model';
 import { ExtractorMessageId } from '../api/ExtractorMessageId';
 import { VisitorState } from '../collector/VisitorState';
 import { ResolverFailure } from '../analyzer/AstReferenceResolver';
+import { AstImportInternal } from '../analyzer/AstImportInternal';
 
 export class DocCommentEnhancer {
   private readonly _collector: Collector;
@@ -33,6 +34,8 @@ export class DocCommentEnhancer {
             this._analyzeApiItem(astDeclaration);
           });
         }
+      } else if (entity.astEntity instanceof AstImportInternal) {
+        // doesn't need to analyze for local module import
       }
     }
   }
